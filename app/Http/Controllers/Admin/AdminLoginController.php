@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-class LoginController extends Controller
+
+class AdminLoginController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -27,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = 'admin/home';
 
     /**
      * Create a new controller instance.
@@ -39,9 +40,32 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function logout(Request $request){
-        Auth::logout();
-        return redirect()->route('login');
+
+       /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\View\View
+     */
+        public function showLoginForm()
+        {
+            return view('admin.login');
+        }
+
+            /**
+     * Get the guard to be used during authentication.
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     */
+    protected function guard()
+    {
+        return Auth::guard('admin');
     }
+
+    public function logout(Request $request){
+        Auth::guard('admin')->logout();
+        return redirect()->route('admin.login');
+    }
+
+
 
 }
